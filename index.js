@@ -29,7 +29,7 @@ db.connect((err) => {
     console.log("Connection established.");
 });
 
-// get data : 
+// get all data : 
 app.get('/questions', (req, res) => {
     console.log("Get all questions")
     let qr = 'SELECT * FROM questions'
@@ -43,9 +43,7 @@ app.get('/questions', (req, res) => {
                 data: results
             })
         }
-
-    }
-    )
+    })
 
 })
 
@@ -67,6 +65,31 @@ app.get('/questions', (req, res) => {
 //     });
 // };
 
+// get single data  :
+
+app.get('/question/:id', (req, res) => {
+    // (whatever after question/:x req.params.x will log what comes after question/:
+    console.log(`Get data by ID : ${req.params.id}`)
+    let qrId = req.params.id
+    let qr = `SELECT * FROM questions where qid=${qrId}`
+    db.query(qr, (err, result) => {
+        if (err) {
+            console.log(err, 'error');
+        }
+        if (result.length > 0) {
+            res.send({
+                message: "The requested data",
+                data: result
+            })
+        }
+        else {
+            res.send({
+                message: "The requested data was not found"
+            })
+        }
+    })
+
+})
 
 
 

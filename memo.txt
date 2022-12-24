@@ -30,3 +30,6 @@ CREATE TABLE IF NOT EXISTS `quiz_answer` (
 exemples : 
 https://www.etutorialspoint.com/index.php/342-how-to-create-a-multiple-choice-quiz-in-php-and-mysql
 
+
+pour rappel : la récupération des paramètres se fait facilement
+req.params.id
