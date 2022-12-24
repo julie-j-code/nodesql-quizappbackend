@@ -1,3 +1,32 @@
 
 npm install -g nodemon
 npm i express cors body-parser mysql2 --save
+
+CREATE TABLE IF NOT EXISTS `questions` (
+  `qid` int(11) NOT NULL AUTO_INCREMENT,
+  `question` varchar(150) NOT NULL,
+  `is_enabled` int(11) NOT NULL,
+  PRIMARY KEY (`qid`)
+) ENGINE=MyISAM AUTO_INCREMENT=5 DEFAULT CHARSET=latin1;
+
+
+CREATE TABLE IF NOT EXISTS `quiz_options` (
+  `option_id` int(11) NOT NULL AUTO_INCREMENT,
+  `qid` int(11) NOT NULL,
+  `option` varchar(150) NOT NULL,
+  `is_enabled` int(11) NOT NULL,
+  PRIMARY KEY (`option_id`)
+) ENGINE=MyISAM AUTO_INCREMENT=17 DEFAULT CHARSET=latin1;
+
+
+CREATE TABLE IF NOT EXISTS `quiz_answer` (
+  `qa_id` int(11) NOT NULL AUTO_INCREMENT,
+  `qid` int(11) NOT NULL,
+  `option_number` int(11) NOT NULL,
+  PRIMARY KEY (`qa_id`)
+) ENGINE=MyISAM AUTO_INCREMENT=5 DEFAULT CHARSET=latin1;
+
+
+exemples : 
+https://www.etutorialspoint.com/index.php/342-how-to-create-a-multiple-choice-quiz-in-php-and-mysql
+
