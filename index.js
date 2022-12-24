@@ -29,6 +29,31 @@ db.connect((err) => {
     console.log("Connection established.");
 });
 
+// get data : 
+app.get('/questions', (req, res)=>{
+    console.log("Get all questions")
+    readData()
+})
+
+
+function readData(){
+    db.query('SELECT * FROM questions', 
+        function (err, results, fields) {
+            if (err) throw err;
+            else console.log('Selected ' + results.length + ' row(s).');
+            for (i = 0; i < results.length; i++) {
+                console.log('Row: ' + JSON.stringify(results[i]));
+            }
+            console.log('Done.');
+        })
+    db.end(
+        function (err) { 
+            if (err) throw err;
+            else  console.log('Closing connection.') 
+    });
+};
+
+
 
 app.listen(3000, () => {
     console.log("Server is running on 3000 port")
