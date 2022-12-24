@@ -30,28 +30,43 @@ db.connect((err) => {
 });
 
 // get data : 
-app.get('/questions', (req, res)=>{
+app.get('/questions', (req, res) => {
     console.log("Get all questions")
-    readData()
+    let qr = 'SELECT * FROM questions'
+    db.query(qr, (err, results) => {
+        if (err) {
+            console.log(err, 'error');
+        }
+        if (results.length > 0) {
+            res.send({
+                message: "All questions data",
+                data: results
+            })
+        }
+
+    }
+    )
+
 })
 
 
-function readData(){
-    db.query('SELECT * FROM questions', 
-        function (err, results, fields) {
-            if (err) throw err;
-            else console.log('Selected ' + results.length + ' row(s).');
-            for (i = 0; i < results.length; i++) {
-                console.log('Row: ' + JSON.stringify(results[i]));
-            }
-            console.log('Done.');
-        })
-    db.end(
-        function (err) { 
-            if (err) throw err;
-            else  console.log('Closing connection.') 
-    });
-};
+// function readData(){
+//     db.query('SELECT * FROM questions', 
+//         function (err, results, fields) {
+//             if (err) throw err;
+//             else console.log('Selected ' + results.length + ' row(s).');
+//             for (i = 0; i < results.length; i++) {
+//                 console.log('Row: ' + JSON.stringify(results[i]));
+//             }
+//             console.log('Done.');
+//         })
+//     db.end(
+//         function (err) { 
+//             if (err) throw err;
+//             else  console.log('Closing connection.') 
+//     });
+// };
+
 
 
 
