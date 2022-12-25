@@ -91,6 +91,27 @@ app.get('/question/:id', (req, res) => {
 
 })
 
+app.post('/question', (req, res) => {
+    // console.log("Post data success")
+    // console.log(req.body);
+    let question = req.body.question
+    let enabled = req.body.is_enabled
+    qr = `INSERT INTO questions (question,is_enabled) VALUES ('${question}', ${enabled})`
+    db.query(qr, (err,result) => {
+        if (err) {
+            console.log(err, 'error')
+        }
+        res.send({
+            message: "Post data success",
+            data: result
+        });
+
+
+    })
+
+})
+
+
 
 
 app.listen(3000, () => {
