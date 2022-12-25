@@ -114,10 +114,10 @@ app.post('/question', (req, res) => {
 app.put('/question/:id', (req, res)=>{
     console.log("Put data succcess");
     console.log(req.params.id);
-    let qrid=req.params.id
+    let qrId=req.params.id
     let question=req.body.question
     let enabled=req.body.is_enabled
-    qr = `UPDATE questions SET question='${question}', is_enabled=${enabled} where qid=${qrid} `
+    qr = `UPDATE questions SET question='${question}', is_enabled=${enabled} where qid=${qrId} `
     db.query(qr, (err,result) => {
         if (err) {
             console.log(err, 'error')
@@ -133,6 +133,29 @@ app.put('/question/:id', (req, res)=>{
         }
     })
 
+})
+
+// delete data :
+app.delete('/question/:id', (req, res)=>{
+    // console.log('delete success');
+    // console.log(req.params.id);
+    qrId=req.params.id
+    qr=`DELETE from questions where qid=${qrId}`
+    db.query(qr, (err, result)=>{
+        if (err){
+            console.log(err);
+            res.send({
+                message:`Something is wrong. Request can not be executed on id = ${qrId}`
+            })
+        }
+        else{
+            res.send({
+                message:'data has been deleted',
+                data:result
+
+            })
+        }
+    })
 })
 
 app.listen(3000, () => {
