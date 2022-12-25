@@ -104,15 +104,36 @@ app.post('/question', (req, res) => {
         res.send({
             message: "Post data success",
             data: result
-        });
-
-
+        })
     })
 
 })
 
 
+// update data :
+app.put('/question/:id', (req, res)=>{
+    console.log("Put data succcess");
+    console.log(req.params.id);
+    let qrid=req.params.id
+    let question=req.body.question
+    let enabled=req.body.is_enabled
+    qr = `UPDATE questions SET question='${question}', is_enabled=${enabled} where qid=${qrid} `
+    db.query(qr, (err,result) => {
+        if (err) {
+            console.log(err, 'error')
+            res.send({
+                message: "Update data failed" + err,
+            })
+        }
+        else{
+            res.send({
+                message: "Update data success",
+                data: result.affectedRows
+            })
+        }
+    })
 
+})
 
 app.listen(3000, () => {
     console.log("Server is running on 3000 port")
