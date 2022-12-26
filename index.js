@@ -29,10 +29,11 @@ db.connect((err) => {
     console.log("Connection established.");
 });
 
-// get all data : 
+// get all data (questions + options) : 
 app.get('/questions', (req, res) => {
     console.log("Get all questions")
-    let qr = 'SELECT * FROM questions'
+    // let qr = 'SELECT * FROM questions'
+    let qr = 'SELECT * FROM questions JOIN quiz_options ON questions.qid=quiz_options.qid'
     db.query(qr, (err, results) => {
         if (err) {
             console.log(err, 'error');
@@ -48,30 +49,14 @@ app.get('/questions', (req, res) => {
 })
 
 
-// function readData(){
-//     db.query('SELECT * FROM questions', 
-//         function (err, results, fields) {
-//             if (err) throw err;
-//             else console.log('Selected ' + results.length + ' row(s).');
-//             for (i = 0; i < results.length; i++) {
-//                 console.log('Row: ' + JSON.stringify(results[i]));
-//             }
-//             console.log('Done.');
-//         })
-//     db.end(
-//         function (err) { 
-//             if (err) throw err;
-//             else  console.log('Closing connection.') 
-//     });
-// };
-
-// get single data  :
-
+// get single data (question + options) with req parameter :
 app.get('/question/:id', (req, res) => {
-    // (whatever after question/:x req.params.x will log what comes after question/:
     console.log(`Get data by ID : ${req.params.id}`)
     let qrId = req.params.id
-    let qr = `SELECT * FROM questions where qid=${qrId}`
+    // let qr = `SELECT * FROM questions where qid=${qrId} AND SELECT * FROM options where qid=${qrId}`
+    let qr = `SELECT * FROM questions JOIN quiz_options ON questions.qid=quiz_options.qid WHERE questions.qid=${qrId}`
+
+
     db.query(qr, (err, result) => {
         if (err) {
             console.log(err, 'error');
