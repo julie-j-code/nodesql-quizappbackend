@@ -100,11 +100,12 @@ app.post('/question', (req, res) => {
 
         }
         console.log(result.insertId);
-        let lastinsertId=result.insertId
+        // let lastinsertId=result.insertId
         let arrayValues = []
         let valueToInsert=""
        
         for (i in options){
+            // https://stackoverflow.com/questions/8899802/how-do-i-do-a-bulk-insert-in-mysql-using-node-js !!!!
             valueToInsert = [result.insertId, options[i].option, options[i].enabled]
             arrayValues.push(valueToInsert)
             // renvoie juste la dernière, ça va pas

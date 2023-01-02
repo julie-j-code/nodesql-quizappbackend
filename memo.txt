@@ -33,3 +33,6 @@ https://www.etutorialspoint.com/index.php/342-how-to-create-a-multiple-choice-qu
 
 pour rappel : la récupération des paramètres se fait facilement
 req.params.id
+
+à lire impératif : https://stackoverflow.com/questions/8899802/how-do-i-do-a-bulk-insert-in-mysql-using-node-js
+
