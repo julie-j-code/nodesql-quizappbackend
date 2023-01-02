@@ -15,6 +15,7 @@ var config =
     password: '',
     database: 'quizappbackend',
     port: 3306,
+    multipleStatements: true
     // ssl: {ca: fs.readFileSync("your_path_to_ca_cert_file_BaltimoreCyberTrustRoot.crt.pem")}
 };
 const db = mysql.createConnection(config);
@@ -76,41 +77,84 @@ app.get('/question/:id', (req, res) => {
 
 })
 
+// post question & options in questions + quiz_options :
+
 app.post('/question', (req, res) => {
     // console.log("Post data success")
     // console.log(req.body);
-    let question = req.body.question
-    let enabled = req.body.is_enabled
-    qr = `INSERT INTO questions (question,is_enabled) VALUES ('${question}', ${enabled})`
-    db.query(qr, (err,result) => {
+    let questions = req.body.questions
+    // let qenabled = req.body.quetions.is_enabled
+    let options = req.body.options
+    // let oenabled = req.body.optionsis_enabled
+    // qr = `INSERT INTO questions (question,is_enabled) VALUES ('${question}', ${enabled})`
+    console.log(options[0].option);
+    qr = `
+    INSERT INTO questions (qid,question,is_enabled) VALUES (NULL,'${questions.question}',${questions.is_enabled});`
+    db.query(qr, (err, result) => {
         if (err) {
             console.log(err, 'error')
+            throw err;
+            // console.log(req.body.questions)
+            // console.log(req.body.options)
+            // console.log(result.insertId);
+
         }
-        res.send({
-            message: "Post data success",
-            data: result
+        console.log(result.insertId);
+        let lastinsertId=result.insertId
+        let arrayValues = []
+        let valueToInsert=""
+       
+        for (i in options){
+            valueToInsert = [result.insertId, options[i].option, options[i].enabled]
+            arrayValues.push(valueToInsert)
+            // renvoie juste la dernière, ça va pas
+            // arrayValues=[...arrayValues, result.insertId, options[i].option, options[i].enabled]
+        }
+        // essai en dur OK :
+        // let values =[[lastinsertId,'dfdfdsfdsfsdfdsf',1],[lastinsertId,'ooooooooooooooooooo',1]], auquel cas, faut quand même passer values en paramètre de query avec []!!!!!!!!!!!!!!!
+        // console.log('blabla', values); OK
+        console.log("array values avant requête", arrayValues);
+        let qrOptions="INSERT INTO `quiz_options`(`qid`,`option`,`is_enabled`) VALUES ?;"
+    
+        db.query(qrOptions,[arrayValues],(errOptions, resultOptions)=>{
+            if(errOptions){
+                console.log("Error on options insert", errOptions)
+                throw errOptions; 
+            }
+            res.send({
+            message: "Post data Options & related Question",
+            data:{...resultOptions, result}
         })
+
+        console.log("data sent", resultOptions);
+        console.log("data sent", result);
+        
+        })
+        // res.send({
+        //     message: "Post data success",
+        //     data: result
+
+        // })
     })
 
 })
 
 
-// update data :
-app.put('/question/:id', (req, res)=>{
+app.put('/question/:id', (req, res) => {
     console.log("Put data succcess");
     console.log(req.params.id);
-    let qrId=req.params.id
-    let question=req.body.question
-    let enabled=req.body.is_enabled
+    let qrId = req.params.id
+    let question = req.body.question
+    let enabled = req.body.is_enabled
     qr = `UPDATE questions SET question='${question}', is_enabled=${enabled} where qid=${qrId} `
-    db.query(qr, (err,result) => {
+    db.query(qr, (err, result) => {
         if (err) {
             console.log(err, 'error')
             res.send({
                 message: "Update data failed" + err,
             })
         }
-        else{
+        else {
             res.send({
                 message: "Update data success",
                 data: result.affectedRows
@@ -121,22 +165,22 @@ app.put('/question/:id', (req, res)=>{
 })
 
 // delete data :
-app.delete('/question/:id', (req, res)=>{
+app.delete('/question/:id', (req, res) => {
     // console.log('delete success');
     // console.log(req.params.id);
-    qrId=req.params.id
-    qr=`DELETE from questions where qid=${qrId}`
-    db.query(qr, (err, result)=>{
-        if (err){
+    qrId = req.params.id
+    qr = `DELETE from questions where qid=${qrId}`
+    db.query(qr, (err, result) => {
+        if (err) {
             console.log(err);
             res.send({
-                message:`Something is wrong. Request can not be executed on id = ${qrId}`
+                message: `Something is wrong. Request can not be executed on id = ${qrId}`
             })
         }
-        else{
+        else {
             res.send({
-                message:'data has been deleted',
-                data:result
+                message: 'data has been deleted',
+                data: result
 
             })
         }
